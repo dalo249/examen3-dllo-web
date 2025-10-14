@@ -5,10 +5,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
     UsersModule,
+    AuthModule,
+    SharedModule,
     ConfigModule.forRoot({
       isGlobal: true
     }),

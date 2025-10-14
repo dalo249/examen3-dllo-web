@@ -11,7 +11,6 @@ export class UsersController {
     constructor(private readonly userService: UsersService){}
 
     @Post()
-    @UsePipes(new ValidationPipe())
     async create(@Body() createUserDto: CreateUserDto): Promise<StandardResponseDto<UserResponseDto>>{
         const userDto = await this.userService.create(createUserDto);
         return new StandardResponseDto(userDto, 'Created', 201);
