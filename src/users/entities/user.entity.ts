@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Hotel } from "src/hotels/entities/hotel.entity";
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 export enum Role {
     ADMIN = "admin",
@@ -20,4 +21,7 @@ export class User{
 
     @Column({type: 'enum', default: Role.CLIENT, enum: Role})
     roles: Role;
+
+    @OneToOne(() => Hotel, hotel => hotel.manager, {nullable: true})
+    hotel?: Hotel;
 }

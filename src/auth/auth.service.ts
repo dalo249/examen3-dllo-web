@@ -55,7 +55,7 @@ export class AuthService {
             throw new UnauthorizedException('email o password invalidos');
         }
         const payload = {
-            sub: validatedUser.id,
+            id: validatedUser.id,
             email: validatedUser.email,
             roles: validatedUser.roles
         };

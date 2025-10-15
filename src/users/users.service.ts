@@ -12,7 +12,6 @@ import { User } from './entities/user.entity';
 export class UsersService{
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
-        private readonly passwordService: PasswordService
     ){}
 
     async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
@@ -32,6 +31,15 @@ export class UsersService{
       }
       return new UserResponseDto(user);
     }
+
+    async findEntityById(id: number): Promise<User> {
+      const user = await this.userRepository.findOneBy({ id });
+      if (!user) {
+          throw new NotFoundException(`No existe usuario con id: ${id}`);
+      }
+      return user;
+    }
+
 
     async findOneByEmail(email: string): Promise<User | null>{
       return await this.userRepository.findOneBy({ email });
