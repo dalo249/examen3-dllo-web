@@ -12,7 +12,7 @@ export class Hotel{
     @Column()
     address: string;
 
-    @OneToOne(() => User, {nullable: false})
+    @OneToOne(() => User, {nullable: false, onDelete: 'CASCADE'})
     @JoinColumn({ name: 'managerId'})
     manager: User;
 }

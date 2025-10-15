@@ -1,4 +1,4 @@
-import { Body, Controller, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { HotelsService } from './hotels.service';
 import { Roles } from 'src/shared/decorators/roles.decorator';
 import { Role, User } from 'src/users/entities/user.entity';
@@ -21,8 +21,15 @@ export class HotelsController {
     async create(
         @Body() createHotelDto: createHotelDto, 
         @GetUser() user: User): Promise<StandardResponseDto<HotelResponseDto>> {
-        const hotelDto = await this.hotelsService.create(createHotelDto, user);
-        return new StandardResponseDto(hotelDto, 'Created', 201);
+            const hotelDto = await this.hotelsService.create(createHotelDto, user);
+            return new StandardResponseDto(hotelDto, 'Created', 201);
+        }
+
+    @Get()
+    @UseGuards(AuthGuard('jwt'))
+    async findAll(): Promise<StandardResponseDto<HotelResponseDto[]>> {
+        const hotelsDto = await this.hotelsService.findAll();
+        return new StandardResponseDto(hotelsDto);
     }
 
     @Patch(':id')
@@ -36,4 +43,12 @@ export class HotelsController {
         const updatedHotel = await this.hotelsService.update(id, UpdateHotelDto, user);
         return new StandardResponseDto(updatedHotel);
     }
+
+    @Delete(':id')
+    @Roles(Role.ADMIN)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+        async delete(@Param('id', ParseIntPipe) id: number): Promise<StandardResponseDto<null>>{
+            await this.hotelsService.delete(id);
+            return new StandardResponseDto(null, "No content: se elimino el hotel exitosamente", 204);
+        }
 }

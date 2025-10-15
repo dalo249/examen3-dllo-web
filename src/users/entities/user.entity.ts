@@ -22,6 +22,6 @@ export class User{
     @Column({type: 'enum', default: Role.CLIENT, enum: Role})
     roles: Role;
 
-    @OneToOne(() => Hotel, hotel => hotel.manager, {nullable: true})
-    hotel?: Hotel;
+    @OneToOne(() => Hotel, hotel => hotel.manager, {nullable: true, onDelete: 'SET NULL'})
+    hotel?: Hotel | null;
 }

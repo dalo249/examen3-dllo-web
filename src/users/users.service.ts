@@ -25,31 +25,27 @@ export class UsersService{
     }
 
     async findOneById(id: number): Promise<UserResponseDto>{
-      const user = await this.userRepository.findOneBy({ id });
-      if (!user){
-          throw new NotFoundException(`No existe usuario con id: ${id}`)
-      }
+      const user = await this.findEntityById(id);
       return new UserResponseDto(user);
     }
 
     async findEntityById(id: number): Promise<User> {
-      const user = await this.userRepository.findOneBy({ id });
+      const user = await this.userRepository.findOne({
+        where: {id},
+        relations: ['hotel']
+      });
       if (!user) {
           throw new NotFoundException(`No existe usuario con id: ${id}`);
       }
       return user;
     }
 
-
     async findOneByEmail(email: string): Promise<User | null>{
       return await this.userRepository.findOneBy({ email });
     }
 
     async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponseDto>{
-      const user = await this.userRepository.findOneBy({id});
-      if (!user){
-          throw new NotFoundException(`No existe usuario con id: ${id}`)
-      }
+      const user = await this.findEntityById(id);
       Object.assign(user, updateUserDto);
       const updatedUser = await this.userRepository.save(user);
       return new UserResponseDto(updatedUser);
@@ -57,10 +53,8 @@ export class UsersService{
     }
 
     async delete(id: number): Promise<void>{
-      const user = await this.userRepository.findOneBy({ id });
-      if (!user){
-          throw new NotFoundException(`No existe usuario con id: ${id}`)
-      }
+      const user = await this.findEntityById(id);
       await this.userRepository.remove(user);
     }
+
 }
