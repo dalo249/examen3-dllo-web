@@ -25,6 +25,13 @@ export class HotelsController {
             return new StandardResponseDto(hotelDto, 'Created', 201);
         }
 
+    @Get(':id')
+    @UseGuards(AuthGuard('jwt'))
+    async findOneById(@Param('id', ParseIntPipe) id: number): Promise<StandardResponseDto<HotelResponseDto>>{
+        const hotelDto = await this.hotelsService.findOneById(id);
+        return new StandardResponseDto(hotelDto);
+    }
+
     @Get()
     @UseGuards(AuthGuard('jwt'))
     async findAll(): Promise<StandardResponseDto<HotelResponseDto[]>> {

@@ -8,13 +8,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 import { HotelsModule } from './hotels/hotels.module';
+import { RoomsModule } from './rooms/rooms.module';
 
 @Module({
   imports: [
-    UsersModule,
-    AuthModule,
-    SharedModule,
-    HotelsModule,
     ConfigModule.forRoot({
       isGlobal: true
     }),
@@ -32,7 +29,11 @@ import { HotelsModule } from './hotels/hotels.module';
         synchronize: true, 
         }),
       }),
-    HotelsModule,
+      UsersModule,
+      AuthModule,
+      SharedModule,
+      HotelsModule,
+      RoomsModule, 
   ],
   controllers: [AppController],
   providers: [AppService],
