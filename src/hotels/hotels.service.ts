@@ -1,4 +1,4 @@
-import { ConflictException, ConsoleLogger, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ConsoleLogger, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Hotel } from './entities/hotel.entity';
 import { Repository } from 'typeorm';
@@ -26,7 +26,7 @@ export class HotelsService {
 
         if(user.roles == Role.ADMIN){
             if(!createHotelDto.managerId){
-                throw new ForbiddenException('Como admin: debe asginar un gerenteId al crear hotel');
+                throw new BadRequestException('Como admin: debe ingresar un gerenteId para asociarlo al hotel');
             }
             manager = await this.usersService.findEntityById(createHotelDto.managerId);
         }else {
@@ -69,10 +69,21 @@ export class HotelsService {
         return hotel;
     }
 
+    async findHotelByManagerId(userId: number): Promise<Hotel> {
+        const hotel = await this.hotelRepository.findOne({
+            where: {manager: {id: userId}},
+        });
+
+        if (!hotel){
+            throw new NotFoundException(`No existe ningun hotel, relacionado con el usuario id: ${userId}`)
+        }
+        return hotel;  
+    }
+
     async update(hotelId: number, updateHotelDto: UpdateHotelDto, user: User){
         const hotel = await this.findEntityById(hotelId);
         if (user.roles == Role.MANAGER){
-            await this.hotelValidator.validateManagerOwnsHotel(hotel, user);
+            this.hotelValidator.validateManagerOwnsHotel(hotel, user);
         }
         Object.assign(hotel, updateHotelDto);
         const savedHotel = await this.hotelRepository.save(hotel);

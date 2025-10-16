@@ -13,7 +13,6 @@ export class HotelValidator{
         private readonly hotelRepository: Repository<Hotel>,
     
     ){}
-
     async validateHotelNameUnique(hotelName: string): Promise<void>{
         const hotel = await this.hotelRepository.findOneBy({name: hotelName});
         if (hotel){
@@ -30,9 +29,9 @@ export class HotelValidator{
         }
     }
 
-    async validateManagerOwnsHotel(hotel: Hotel, user: User): Promise<void>{
+    validateManagerOwnsHotel(hotel: Hotel, user: User): void{
         if(hotel.manager.id !== user.id){
-            throw new ForbiddenException(`El gerente con id: ${hotel.id}, No tiene asignado el hotel: ${hotel.name}`);
+            throw new ForbiddenException(`El gerente con id: ${user.id}, No tiene asignado el hotel: ${hotel.name}`);
         }
     }
 }

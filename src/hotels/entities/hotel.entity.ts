@@ -1,5 +1,6 @@
+import { Room } from "src/rooms/entities/room.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Hotel{
@@ -12,7 +13,15 @@ export class Hotel{
     @Column()
     address: string;
 
-    @OneToOne(() => User, {nullable: false, onDelete: 'CASCADE'})
+    @OneToOne(() => User, {
+        nullable: false, 
+        onDelete: 'CASCADE'})
     @JoinColumn({ name: 'managerId'})
     manager: User;
+
+    @OneToMany(() => Room, (room) => room.hotel, {
+        cascade: true, 
+    })
+    rooms: Room[];
+
 }
