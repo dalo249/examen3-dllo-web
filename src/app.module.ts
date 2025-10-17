@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 import { HotelsModule } from './hotels/hotels.module';
 import { RoomsModule } from './rooms/rooms.module';
+import { ReservationsModule } from './reservations/reservations.module';
+
 
 @Module({
   imports: [
@@ -33,7 +35,8 @@ import { RoomsModule } from './rooms/rooms.module';
       AuthModule,
       SharedModule,
       HotelsModule,
-      RoomsModule, 
+      RoomsModule,
+      ReservationsModule, 
   ],
   controllers: [AppController],
   providers: [AppService],

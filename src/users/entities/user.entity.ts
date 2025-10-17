@@ -1,5 +1,6 @@
 import { Hotel } from "src/hotels/entities/hotel.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Reservation } from "src/reservations/entities/Reservation.entity";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 export enum Role {
     ADMIN = "admin",
@@ -24,4 +25,9 @@ export class User{
 
     @OneToOne(() => Hotel, hotel => hotel.manager, {nullable: true, onDelete: 'SET NULL'})
     hotel?: Hotel | null;
+
+    @OneToMany(() => Reservation, (reservation) => reservation.user,{
+        cascade: true
+    })
+    reservations: Reservation[];
 }

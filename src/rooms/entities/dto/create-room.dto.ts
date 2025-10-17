@@ -10,6 +10,10 @@ export class CreateRoomDto {
   @IsEnum(RoomType)
   type: RoomType;
 
+  @IsNotEmpty()
+  @IsNumber()
+  price: number;
+
   @IsOptional()
   @IsNumber()
   hotelId?: number; 

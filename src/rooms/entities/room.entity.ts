@@ -1,5 +1,6 @@
 import { Hotel } from "src/hotels/entities/hotel.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Reservation } from "src/reservations/entities/Reservation.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum RoomType {
     BASICA = "basica",
@@ -19,11 +20,19 @@ export class Room{
     @Column({ type: 'enum', enum: RoomType, default: RoomType.BASICA,})
     type: RoomType;
 
+    @Column({type: 'decimal', nullable:false, scale:2})
+    price: number
+
     @ManyToOne(() => Hotel, (hotel) => hotel.rooms, {
         nullable: false, 
         onDelete: 'CASCADE'
     })
     @JoinColumn({ name: 'hotelId'})
     hotel: Hotel;
+
+    @OneToMany(() => Reservation, (reservation) => reservation.room,{
+            cascade: true
+        })
+        reservations: Reservation[];
 
 }
