@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/shared/decorators/get-user.decorator';
 import { Roles } from 'src/shared/decorators/roles.decorator';
@@ -23,5 +23,25 @@ export class ReservationsController {
     ): Promise<StandardResponseDto<ReservationResponseDto>> {
         const reservationDto = await this.reservationsService.create(createReservationDto, user);
         return new StandardResponseDto(reservationDto, 'Created', 201);
+    }
+
+    @Get()
+    @Roles(Role.ADMIN)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    async findAll(@GetUser() user: User): Promise<StandardResponseDto<ReservationResponseDto[]>>{
+        const reservations = await this.reservationsService.findAll(user);
+        return new StandardResponseDto(reservations);
+    }
+
+    @Delete(':id')
+    @Roles(Role.ADMIN, Role.CLIENT)
+    @UseGuards(AuthGuard('jwt'), RolesGuard)
+    async delete(
+        @Param('id', ParseIntPipe) id: number,
+        @GetUser() user: User,
+    ): Promise<StandardResponseDto<null>>{
+        await this.reservationsService.delete(id, user);
+        return new StandardResponseDto(null, "No content: se elimino la reserva exitosamente", 204);
+            
     }
 }

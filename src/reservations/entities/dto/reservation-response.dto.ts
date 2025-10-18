@@ -11,6 +11,8 @@ export class ReservationResponseDto{
         hotelName: string;
     }
 
+    user: { id: number};
+
     constructor(reservation : Reservation){
         this.id= reservation.id;
         this.startDate = reservation.startDate;
@@ -20,6 +22,8 @@ export class ReservationResponseDto{
             number: reservation.room.numberRoom,
             hotelName: reservation.room.hotel.name
         }
-
+        this.user = { 
+            id: reservation.user.id
+        }
     }
 }

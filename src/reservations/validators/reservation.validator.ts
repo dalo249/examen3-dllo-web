@@ -1,7 +1,9 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Reservation } from "../entities/Reservation.entity";
 import { LessThan, MoreThan, Repository } from "typeorm";
+import { User } from "src/users/entities/user.entity";
+import { ReservationResponseDto } from "../entities/dto/reservation-response.dto";
 
 @Injectable()
 export class ReservationValidator{
@@ -31,6 +33,19 @@ export class ReservationValidator{
 
         if (reservationConflict){
             throw new BadRequestException(`Ya existe una reserva para la habitacion id:${roomId}, en el rango de fechas ingresado`)
+        };
+    }
+
+    validateUserOwnsReservation(reservation: Reservation, user: User): void{
+        if(reservation.user.id !== user.id){
+            throw new ForbiddenException(`El cliente con id ${user.id}, no es dueño de la reserva`);
+        }
+    }
+
+    validateCanDeleteReservation(reservation: Reservation): void{
+        if(reservation.startDate <= new Date()){
+            throw new BadRequestException('Solo puede eliminar reservas que no han comenzado');
+        
         };
     }
 }
