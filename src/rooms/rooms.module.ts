@@ -12,6 +12,7 @@ import { RoomValidator } from './validators/room.validator';
     HotelsModule,
   ],
   controllers: [RoomsController],
-  providers: [RoomsService, RoomValidator]
+  providers: [RoomsService, RoomValidator],
+  exports: [RoomsService]
 })
 export class RoomsModule {}

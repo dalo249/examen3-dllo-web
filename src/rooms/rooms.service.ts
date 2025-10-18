@@ -65,7 +65,7 @@ export class RoomsService {
             relations: ['hotel', 'hotel.manager'],
         });
         if (!room) {
-            throw new NotFoundException(`No existe una habitacion con id: ${id}`)
+            throw new NotFoundException(`No existe una habitacion con id: ${id}`);
         }
         return room;
     }
